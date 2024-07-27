@@ -1,0 +1,154 @@
+stages:
+  - test
+  - sonarcloud
+  - publish
+  - deploy
+
+test-coverage:
+  stage: test
+  image: python:3.12-alpine
+  services:
+    - "postgres:12.1"
+  variables:
+    DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/postgres"
+    DJANGO_SETTINGS_MODULE: "hafizhelper.settings.gitlab-ci"
+    SECRET_KEY: "secret"
+    STACK_NAME: "placeholder"
+    DEBUG: "True"
+    FIREBASE_ADMIN_SDK_CREDENTIALS_PATH: $FIREBASE_ADMIN_SDK_CREDENTIALS_PATH
+    FIREBASE_CREDENTIALS: $FIREBASE_ADMIN_SDK_CREDENTIALS
+  before_script:
+    - cat $FIREBASE_CREDENTIALS >> private_key.json
+    - pip install -r requirements.txt
+    - python manage.py makemigrations
+    - python manage.py migrate
+  script:
+    - coverage run manage.py test
+    - coverage report -m
+    - coverage xml -o coverage.xml
+  after_script:
+    - echo "Coverage tests complete"
+  coverage: "/TOTAL.+ ([0-9]{1,3}%)/"
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - $CI_PROJECT_DIR/coverage.xml
+  allow_failure: true
+
+sonarcloud-check:
+  stage: sonarcloud
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  script:
+    - sonar-scanner -Dsonar.verbose=true
+  needs:
+    - job: test-coverage
+      artifacts: true
+  allow_failure: true
+
+publish_dev:
+  stage: publish
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "/certs/client"
+  before_script:
+    - echo $DOCKER_PASSWORD | docker login -u $REGISTRY_USER --password-stdin docker.io
+  script:
+    - ls
+    - docker build --build-arg SECRET_KEY=$SECRET_KEY --build-arg JDBC_DATABASE_DEV_PASSWORD=$JDBC_DATABASE_DEV_PASSWORD --build-arg JDBC_DATABASE_DEV_HOST=$JDBC_DATABASE_DEV_HOST --build-arg JDBC_DATABASE_DEV_USERNAME=$JDBC_DATABASE_DEV_USERNAME -t $REGISTRY_USER/$IMAGE_NAME:latest -f docker/dev.Dockerfile .
+    - docker push $REGISTRY_USER/$IMAGE_NAME:latest
+  only:
+    - develop
+
+deploy_dev:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - chmod 400 $SSH_PRIVATE_KEY
+    - apk update && apk add openssh-client
+  script:
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $GCP_USERNAME@$GCP_STATIC_IP_DEV "
+      docker container rm -f $CONTAINER_NAME || true &&
+      docker image rm -f $REGISTRY_USER/$IMAGE_NAME:latest|| true &&
+      docker run --name $CONTAINER_NAME -d -p 80:8000 --restart unless-stopped $REGISTRY_USER/$IMAGE_NAME:latest"
+  only:
+    - develop
+
+publish_staging:
+  stage: publish
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "/certs/client"
+  before_script:
+    - echo $DOCKER_PASSWORD | docker login -u $REGISTRY_USER --password-stdin docker.io
+  script:
+    - ls
+    - docker build --build-arg SECRET_KEY=$SECRET_KEY --build-arg JDBC_DATABASE_STAGING_PASSWORD=$JDBC_DATABASE_STAGING_PASSWORD --build-arg JDBC_DATABASE_STAGING_HOST=$JDBC_DATABASE_STAGING_HOST --build-arg JDBC_DATABASE_STAGING_USERNAME=$JDBC_DATABASE_STAGING_USERNAME -t $REGISTRY_USER/$IMAGE_NAME:latest -f docker/staging.Dockerfile .
+    - docker push $REGISTRY_USER/$IMAGE_NAME:latest
+  only:
+    - staging
+
+deploy_staging:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - chmod 400 $SSH_PRIVATE_KEY
+    - apk update && apk add openssh-client
+  script:
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $GCP_USERNAME@$GCP_STATIC_IP_STAGING "
+      docker container rm -f $CONTAINER_NAME || true &&
+      docker image rm -f $REGISTRY_USER/$IMAGE_NAME:latest|| true &&
+      docker run --name $CONTAINER_NAME -d -p 80:8000 --restart unless-stopped $REGISTRY_USER/$IMAGE_NAME:latest"
+  only:
+    - staging
+
+publish_prod:
+  stage: publish
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "/certs/client"
+  before_script:
+    - echo $DOCKER_PASSWORD | docker login -u $REGISTRY_USER --password-stdin docker.io
+  script:
+    - ls
+    - docker build --build-arg SECRET_KEY=$SECRET_KEY --build-arg JDBC_DATABASE_PROD_PASSWORD=$JDBC_DATABASE_PROD_PASSWORD --build-arg JDBC_DATABASE_PROD_HOST=$JDBC_DATABASE_PROD_HOST --build-arg JDBC_DATABASE_PROD_USERNAME=$JDBC_DATABASE_PROD_USERNAME -t $REGISTRY_USER/$IMAGE_NAME:latest -f docker/prod.Dockerfile .
+    - docker push $REGISTRY_USER/$IMAGE_NAME:latest
+  only:
+    - main
+
+deploy_prod:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - chmod 400 $SSH_PRIVATE_KEY
+    - apk update && apk add openssh-client
+  script:
+    - scp -r -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY docker/docker-compose.monitoring.yml docker/prod.Dockerfile ./monitoring $GCP_USERNAME@$GCP_STATIC_IP_PROD:~
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $GCP_USERNAME@$GCP_STATIC_IP_PROD "
+      docker compose -f docker-compose.monitoring.yml down -v || true &&
+      docker image rm -f $REGISTRY_USER/$IMAGE_NAME:latest || true &&
+      docker compose -f docker-compose.monitoring.yml up -d "
+  only:
+    - main

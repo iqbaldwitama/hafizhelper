@@ -1,0 +1,16 @@
+{
+  "build": {
+    "preview": {
+      "android": {
+        "buildType": "apk",
+        "env": {
+          "EXPO_PUBLIC_BASE_URL": "http://35.219.105.225"
+        }
+      },
+      "ios": {
+        "simulator": true
+      }
+    },
+    "production": {}
+  }
+}

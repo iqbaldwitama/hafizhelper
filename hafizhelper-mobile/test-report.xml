@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/verseDetail/Audio.test.tsx">
+    <testCase name="VerseDetailPage loads audio when page is rendered" duration="89"/>
+    <testCase name="VerseDetailPage should load settings from AsyncStorage" duration="9"/>
+    <testCase name="VerseDetailPage should load latin false" duration="18"/>
+    <testCase name="VerseDetailPage plays audio when play button is pressed" duration="28"/>
+    <testCase name="VerseDetailPage pause audio when play button is pressed and audio is playing" duration="23"/>
+    <testCase name="VerseDetailPage stops audio when play button is pressed and audio is playing" duration="24"/>
+    <testCase name="VerseDetailPage logs error when loading audio fails" duration="9"/>
+    <testCase name="VerseDetailPage logs error when toggle button" duration="14"/>
+    <testCase name="VerseDetailPage should call stopAsync when audio playback finishes" duration="8"/>
+    <testCase name="VerseDetailPage should not call stopAsync when audio playback finishes" duration="10"/>
+    <testCase name="VerseDetailPage should not play audio when audio is not loaded and isAudioPlaying is false" duration="22"/>
+    <testCase name="VerseDetailPage logs error when unloading audio fails" duration="8"/>
+    <testCase name="VerseDetailPage should call replayAsync when play button is pressed and repeat button is toggled" duration="10"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/verse/VerseListPage.test.tsx">
+    <testCase name="Verse List Page displays the loading indicator when data is being fetched" duration="37"/>
+    <testCase name="Verse List Page displays an error message if there is an error" duration="17"/>
+    <testCase name="Verse List Page renders verse data when fetched successfully" duration="24"/>
+    <testCase name="Verse List Page should load arti true" duration="14"/>
+    <testCase name="Verse List Page should load arti false" duration="13"/>
+    <testCase name="Verse List Page navigates to another screen when a verse is pressed" duration="15"/>
+    <testCase name="Verse List Page fetches data successfully from an API" duration="2"/>
+    <testCase name="Verse List Page throws an error when the API call fails" duration="35"/>
+    <testCase name="Verse List Page renders default suratId(1) when it is absent" duration="14"/>
+    <testCase name="Verse List Page calls onRefresh function when reset button is pressed" duration="5"/>
+    <testCase name="Verse List Page clears input and shows an error alert if an invalid verse number is submitted" duration="9"/>
+    <testCase name="Verse List Page submits a valid verse number and navigates to the detail view" duration="5"/>
+    <testCase name="Verse List Page shows an error when an invalid (high) verse number is submitted and `jumlahAyat` is undefined" duration="3"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/navigation/customDrawer/CustomDrawer.test.tsx">
+    <testCase name="CustomDrawerContent renders profile information correctly" duration="148"/>
+    <testCase name="CustomDrawerContent navigates to ProfilePage on profile press" duration="143"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/surah/HomePage.test.tsx">
+    <testCase name="List Surah Component renders the page correctly" duration="257"/>
+    <testCase name="List Surah Component navigates to another screen when surah card is pressed" duration="64"/>
+    <testCase name="List Surah Component fetches Surah successfully" duration="1"/>
+    <testCase name="List Surah Component throws an error when the API call fails" duration="103"/>
+    <testCase name="List Surah Component functional search input" duration="61"/>
+    <testCase name="List Surah Component should set PopupStatus to true in AsyncStorage and hide popup when done" duration="58"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/settings/SettingsPage.test.tsx">
+    <testCase name="&lt;SettingsPage /&gt; renders correctly" duration="153"/>
+    <testCase name="&lt;SettingsPage /&gt; toggles Latin option correctly" duration="65"/>
+    <testCase name="&lt;SettingsPage /&gt; toggles Arti option correctly" duration="12"/>
+    <testCase name="&lt;SettingsPage /&gt; displays correct audio option modal" duration="57"/>
+    <testCase name="&lt;SettingsPage /&gt; should show Latin info on pressIn and hide on pressOut" duration="17"/>
+    <testCase name="&lt;SettingsPage /&gt; should show arti info on pressIn and hide on pressOut" duration="18"/>
+    <testCase name="&lt;SettingsPage /&gt; should show audio info on pressIn and hide on pressOut" duration="15"/>
+    <testCase name="&lt;SettingsPage /&gt; should close audio modal when pressed outside" duration="39"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/navigation/AppNavigation.test.tsx">
+    <testCase name="AppNavigation opens drawer when menu button is pressed" duration="125"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/FontsLoad.test.tsx">
+    <testCase name="Font is not loaded should render loading state when font is not loaded for errorPage" duration="37"/>
+    <testCase name="Font is not loaded should render loading state when font is not loaded for verseListPage" duration="7"/>
+    <testCase name="Font is not loaded should render loading state when font is not loaded for verseDetailPage" duration="10"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/verseDetail/PrevNextPositive.test.tsx">
+    <testCase name="handles error when audio URI is undefined" duration="40"/>
+    <testCase name="PrevNextPositive navigates to next verse when next button is pressed" duration="12"/>
+    <testCase name="PrevNextPositive navigates to previous verse when previous button is pressed" duration="10"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/verseDetail/VerseDetailPage.test.tsx">
+    <testCase name="VerseDetailPage should renders correctly initially" duration="47"/>
+    <testCase name="VerseDetailPage should toggle repeat state on button press" duration="29"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/verseDetail/PrevNextNegative.test.tsx">
+    <testCase name="PrevNextPositive should not navigate to next verse when nomorAyat does not exist" duration="43"/>
+    <testCase name="PrevNextPositive should not navigate to previous verse when nomorAyat does not exist" duration="10"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/components/drawer/CustomDrawerItem.test.tsx">
+    <testCase name="CustomDrawerItem renders correctly" duration="30"/>
+    <testCase name="CustomDrawerItem navigates when clicked" duration="5"/>
+    <testCase name="CustomDrawerItem calls additional behaviour if provided when clicked" duration="7"/>
+    <testCase name="CustomDrawerItem does not throw error if additional behavior is not defined" duration="4"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/error/ErrorPage.test.tsx">
+    <testCase name="ErrorPage renders correctly" duration="75"/>
+    <testCase name="ErrorPage calls resetError function when &quot;Coba lagi&quot; button is pressed" duration="9"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/profile/ProfilePage.test.tsx">
+    <testCase name="&lt;ProfilePage /&gt; renders profile page correctly" duration="117"/>
+    <testCase name="&lt;ProfilePage /&gt; toggles edit mode correctly" duration="10"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/welcome/WelcomePage.test.tsx">
+    <testCase name="WelcomePage renders correctly" duration="139"/>
+    <testCase name="WelcomePage navigates to Login on button press" duration="4"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/__tests__/Intro.test.tsx">
+    <testCase name="renders correctly" duration="35"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/src/screens/login/LoginPage.test.tsx">
+    <testCase name="LoginPage renders correctly" duration="139"/>
+    <testCase name="LoginPage navigates to HomePage on button press" duration="8"/>
+  </file>
+  <file path="/Users/fauzanfirzandy/Desktop/PPL/main/hafizhelper-mobile/__tests__/Intro-test.tsx">
+    <testCase name="renders correctly" duration="39"/>
+  </file>
+</testExecutions>

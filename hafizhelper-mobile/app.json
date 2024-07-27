@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "hafizh-helper-mobile",
+    "slug": "hafizh-helper-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/images/logo_small.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./src/assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#248B6B"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hafiz.hafizhhelpermobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/images/logo_small.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.hafiz.hafizhhelpermobile"
+    },
+    "web": {
+      "favicon": "./assets/logo_small.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "73501f66-b143-4f31-9dcc-3332bfcd0dc0"
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      "expo-font"
+    ]
+  }
+}

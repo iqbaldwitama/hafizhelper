@@ -1,0 +1,51 @@
+groups:
+  - name: targets
+    rules:
+      - alert: monitor_service_down
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Monitor service non-operational"
+          description: "Service {{ $labels.instance }} is down."
+          
+  - name: host
+    rules:
+      - alert: high_storage_load
+        expr: (node_filesystem_size_bytes{fstype="aufs"} - node_filesystem_free_bytes{fstype="aufs"}) / node_filesystem_size_bytes{fstype="aufs"} * 100 > 70
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Server storage is almost full"
+          description: "Docker host storage usage is {{ humanize $value}}%. Reported by instance {{ $labels.instance }} of job {{ $labels.job }}."
+
+  - name: containers
+    rules:
+      - alert: django_app_down
+        expr: absent(container_memory_usage_bytes{name="hafiz-helper-container"})
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "django_app down"
+          description: "django_app container is down for more than 30 seconds."
+
+      - alert: django_app_high_cpu
+        expr: sum(rate(container_cpu_usage_seconds_total{name="hafiz-helper-container"}[1m])) / count(node_cpu_seconds_total{mode="system"}) * 100 > 50
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "django_app high CPU usage"
+          description: "django_app CPU usage is {{ humanize $value}}%."
+
+      - alert: django_app_high_memory
+        expr: sum(container_memory_usage_bytes{name="hafiz-helper-container"}) > 125000000
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "django_app high memory usage"
+          description: "django_app memory consumption is at {{ humanize $value}}."

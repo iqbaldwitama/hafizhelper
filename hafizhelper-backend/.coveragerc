@@ -1,0 +1,10 @@
+[run]
+omit =
+  */env/*
+  */venv/*
+  */migrations/*
+  */commons/*
+  */hafizhelper/*
+  */models/*
+  */helloworld/*
+  manage.py

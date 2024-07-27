@@ -1,0 +1,8 @@
+# !/bin/sh
+
+# Your existing pre-commit hook commands
+# For example:
+# yarn lint
+
+# Add the lint-staged command
+npx --no-install lint-staged
